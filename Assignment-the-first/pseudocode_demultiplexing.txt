@@ -1,0 +1,110 @@
+#########################################
+## DEMULTIPLEXING ILLUMINA FASTQ FILES ##
+##            PSUEDO CODE              ##
+#########################################
+
+High level summary:
+    This algorithm will demultiplex illumina fastq output: the four fastq files will be sorted
+    for quality (read with barcodes containing N or that do not meet the quality score cutoff) will be produced 
+    in two output fastq files, one forward, one reverse.
+    
+    Then, it will search for index hopping and produce all reads with hopped indices in two fastq files
+    one for forward and one for reverse.
+    
+    The remaing reads should be those with sufficient quality barcodes that are not indexed hopped. They will be
+    produced in two fastq files (one fwd and one rev) for EACH barcode, that is a total of 48 fastq files.
+    
+    This program will produce 52 total fastq files.
+
+    Additionally, it will produce a txt file that contains a table describing the number of records in each fastq output file.
+
+SCRIPT:
+
+Argparse function to pass in fastq files, R1, R2, R3, R4, and barcodes.
+
+Assigning fastq files to variables for use in the script:
+    R1 = read1
+    R2 = index1
+    R3 = index2
+    R4 = read2
+
+DEFINE FUNCTIONS
+
+def get_barcode_qscore:
+    '''this function converts the letter/symbol in the qscore line to a qscore integer'''
+    The qscore is equal to the letter/symbol converted from ASCII minus 33.
+    
+    return qscore
+    
+    example:
+    input: #
+    output: 2
+
+def get_permutations:
+    '''produce list of all possible mismatches as a list of tuples 
+    (permutations of index hopping)'''
+    use python function to loop over list of 24 barcodes and produce
+    list of tuples of all possible permutations
+
+    return permutations
+
+    example:
+    input: 1,2,3
+    output: (1,1)(1,2)(1,3)(2,1)(2,2)(2,3)(3,1)(3,2)(3,3)
+
+def get_reverse_complement(index2):
+    '''this function will produce the reverse complement of a DNA strand'''
+    loop through list of index2 and sequences:
+        for each sequence convert to reverse complement.
+
+    return rev_comp
+
+    example:
+    input: ACGTTCGG
+    output: CCGAACGT
+
+OPEN FILES AND PARSE THEM
+
+open all four files:
+    for each file, store the record (four lines each), so you will have records from read1, index1, index2, and read2
+        extract the barcode sequences from the barcode records
+        use the get_reverse_complement_function to get the reverse complement of index2
+        
+        compare the barcodes from index1 and index2:
+
+            if either barcode contains an N:
+                1. open a file to write record from read1 that will: 
+                contain all of the records with poor quality barcodes from read1 (either becuase they do not
+                meet the qscore cutoff or because they contain an N) 
+                2. and add the barcodes to the end of the header line with a dash in between (eg. ATC-ATC)
+                keep track of the number of records that go into each file using a counter
+                    
+                repeat steps 1 and 2 for record from read2
+
+            otherwise, get avg qual score of barcodes using get_barcode_qscore function:
+                if either barcode does not meet the qscore cutoff:
+                add barcodes to the files in the above step for reads with low quality barcodes
+                keep track of the number of records that go into each file using a counter
+
+            otherwise, if the barcodes do not match:
+                open two more files for read1 and read2
+                append records with mis-matched indices to their respective files, 
+                adding the barcodes to the header line (like above, step 2)
+                keep track of the number of records that go into each file using a counter
+
+            otherwise, if the barcodes match 
+                open two more files for read1 and read2 specifically for that barcode and append the records to 
+                unless the files already exist, then add records to the existing files.
+                keep track of the number of records that go into each file using a counter
+
+WRITE SUMMARY TABLE:
+
+using counters above, create table that summarizes the number of records in each file 
+and write results to a text file.
+
+***be sure to close all files!!!!!!
+
+
+
+
+
