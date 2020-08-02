@@ -22,17 +22,17 @@
     command used: '''zcat <file> | sed -n 2~4 | grep "N" | wc -l'''
     
 ## Part 2
-1. Define the problem
-    Please see pseudocode_demultiplexing.txt.
-2. Describe output
-    Please see pseudocode_demultiplexing.txt.
-3. Upload your [4 input FASTQ files](../TEST-input_FASTQ) and your [4 expected output FASTQ files](../TEST-output_FASTQ).
-    Please see directories.
-4. Pseudocode
-    Please see pseudocode_demultiplexing.txt.
+1. Define the problem  
+Please see pseudocode_demultiplexing.txt.
+2. Describe output  
+Please see pseudocode_demultiplexing.txt.
+3. Upload your [4 input FASTQ files](../TEST-input_FASTQ) and your [4 expected output FASTQ files](../TEST-output_FASTQ).  
+Please see directories.
+4. Pseudocode  
+Please see pseudocode_demultiplexing.txt.
 5. High level functions. For each function, be sure to include:
     1. Description/doc string
     2. Function headers (name and parameters)
     3. Test examples for individual functions
-    4. Return statement
-    Please see pseudocode_demultiplexing.txt.
+    4. Return statement  
+Please see pseudocode_demultiplexing.txt.
