@@ -1,0 +1,25 @@
+#!/bin/bash
+
+#SBATCH --partition=bgmp                                   ### Partition (like a queue in PBS)
+#SBATCH --job-name=demultiplex_2017seqing_cutoff20         ### Job Name
+#SBATCH --output=demultiplex_2017seqing_cutoff20_%j.out    ### File in which to store job output
+#SBATCH --error=demultiplex_2017seqing_cutoff20_%j.err     ### File in which to store job error messages
+#SBATCH --time=3-00:00:00                                  ### Wall clock time limit in Days-HH:MM:SS
+#SBATCH --nodes=1                                          ### Number of nodes needed for the job
+#SBATCH --ntasks-per-node=1                                ### Number of tasks to be launched per Node
+#SBATCH --account=bgmp                                     ### Account used for job submission
+
+conda activate bgmp_py37
+
+/usr/bin/time -v \
+/projects/bgmp/dglidden/bioinfo/Bi622/demultiplexing-demiglidden/Assignment-the-third/demultiplex.py \
+-R1 /projects/bgmp/shared/2017_sequencing/1294_S1_L008_R1_001.fastq.gz \
+-R2 /projects/bgmp/shared/2017_sequencing/1294_S1_L008_R2_001.fastq.gz \
+-R3 /projects/bgmp/shared/2017_sequencing/1294_S1_L008_R3_001.fastq.gz \
+-R4 /projects/bgmp/shared/2017_sequencing/1294_S1_L008_R4_001.fastq.gz \
+-b /projects/bgmp/shared/2017_sequencing/indexes.txt \
+-q 20 \
+-o 1294_S1_L008_R1_001_cutoff20
+
+/usr/bin/time -v \
+gzip *fastq
